@@ -12,8 +12,24 @@
 </head>
 
 <body>
+    <div id="container"></div>
     <script>
-        var jsonDiff = new JSONDiff();
+        console.log(JSONDiff)
+        var jsonDiff = new JSONDiff({
+            container: document.getElementById('container'),
+            data: {
+                base: {
+                    a: {
+                        c: 1,
+                        b: {
+                            a: 1
+                        },
+                        d: null
+                    },
+                    b: 'sdsd'
+                }
+            }
+        });
     </script>
 </body>
 

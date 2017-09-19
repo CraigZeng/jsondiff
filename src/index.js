@@ -1,8 +1,10 @@
 import utils from './utils';
 
 class JSONDiff {
-    constructor() {
-        console.log('tesst');
+    constructor(options) {
+        this.container = options.container;
+        this.data = options.data;
+        this.render();
     }
     renderDiff() {
 
@@ -14,10 +16,10 @@ class JSONDiff {
 
     }
     render() {
-
+        this.container.innerHTML = this.renderJSON(data.base);
     }
-    renderJSON() {
-
+    renderJSON(jsonObj) {
+        utils.formatJSON(jsonObj);
     }
 }
 

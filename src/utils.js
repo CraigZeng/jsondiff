@@ -55,20 +55,24 @@ function createJSONArrayToken(position) {
     }
 }
 
+function wrapJSONBlock(html) {
+    return '<div class="json-block">' + html + '</div>';
+}
+
 function formatJSON(jsonObj) {
     var type = typeIt(jsonObj);
     var html = '';
     switch (type) {
         case 'object':
             var keys = Object.keys(json);
-            html = createJSONBlockToken('start') + keys.sort().map(function (key) {
+            html = createJSONBlockToken('start') + wrapJSONBlock(keys.sort().map(function (key) {
                 return createJSONKey(key) + createJSONSplitToken() + formatJSON(jsonObj[key]);
-            }).join('') + createJSONBlockToken('end');
+            }).join('')) + createJSONBlockToken('end');
             break;
         case 'array':
-            html = createJSONArrayToken('start') + jsonObj.map(function (item) {
+            html = createJSONArrayToken('start') + wrapJSONBlock(jsonObj.map(function (item) {
                 return formatJSON(item);
-            }).join('') + createJSONArrayToken('end');
+            }).join('')) + createJSONArrayToken('end');
             break;
         case 'number':
             html = createJSONValue('number', json);
