@@ -16,10 +16,10 @@ class JSONDiff {
 
     }
     render() {
-        this.container.innerHTML = this.renderJSON(data.base);
+        this.container.innerHTML = this.renderJSON(this.data.base);
     }
     renderJSON(jsonObj) {
-        utils.formatJSON(jsonObj);
+        return utils.formatJSON(jsonObj);
     }
 }
 

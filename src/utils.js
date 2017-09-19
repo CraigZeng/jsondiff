@@ -64,7 +64,7 @@ function formatJSON(jsonObj) {
     var html = '';
     switch (type) {
         case 'object':
-            var keys = Object.keys(json);
+            var keys = Object.keys(jsonObj);
             html = createJSONBlockToken('start') + wrapJSONBlock(keys.sort().map(function (key) {
                 return createJSONKey(key) + createJSONSplitToken() + formatJSON(jsonObj[key]);
             }).join('')) + createJSONBlockToken('end');
@@ -75,18 +75,19 @@ function formatJSON(jsonObj) {
             }).join('')) + createJSONArrayToken('end');
             break;
         case 'number':
-            html = createJSONValue('number', json);
+            html = createJSONValue('number', jsonObj);
             break;
         case 'string':
-            html = createJSONValue('string', json);
+            html = createJSONValue('string', jsonObj);
             break;
         case 'null':
-            html = createJSONValue('null', json);
+            html = createJSONValue('null', jsonObj);
             break;
         default:
-            html = createJSONValue('', json);
+            html = createJSONValue('', jsonObj);
             break;
     }
+    return html;
 }
 
 
