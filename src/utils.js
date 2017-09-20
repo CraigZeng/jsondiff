@@ -59,19 +59,27 @@ function wrapJSONBlock(html) {
     return '<div class="json-block">' + html + '</div>';
 }
 
-function formatJSON(jsonObj) {
+function wrapJSONProp(html) {
+    return '<div class="json-prop">' + html + '</div>';
+}
+
+function wrapJSONArrItem(html) {
+    return '<div class="json-arr-item">' + html + '</div>';
+}
+
+function formatInnerJSON(jsonObj) {
     var type = typeIt(jsonObj);
     var html = '';
     switch (type) {
         case 'object':
             var keys = Object.keys(jsonObj);
             html = createJSONBlockToken('start') + wrapJSONBlock(keys.sort().map(function (key) {
-                return createJSONKey(key) + createJSONSplitToken() + formatJSON(jsonObj[key]);
+                return wrapJSONProp(createJSONKey(key) + createJSONSplitToken() + formatInnerJSON(jsonObj[key]));
             }).join('')) + createJSONBlockToken('end');
             break;
         case 'array':
             html = createJSONArrayToken('start') + wrapJSONBlock(jsonObj.map(function (item) {
-                return formatJSON(item);
+                return wrapJSONArrItem(formatInnerJSON(item));
             }).join('')) + createJSONArrayToken('end');
             break;
         case 'number':
@@ -90,6 +98,9 @@ function formatJSON(jsonObj) {
     return html;
 }
 
+function formatJSON(jsonObj) {
+    return '<div class="json-block">' + formatInnerJSON(jsonObj) + '</div>';
+}
 
 export default {
     typeIt,

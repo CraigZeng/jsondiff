@@ -1,19 +1,11 @@
 import utils from './utils';
+import './jsondiff.less';
 
 class JSONDiff {
     constructor(options) {
         this.container = options.container;
         this.data = options.data;
         this.render();
-    }
-    renderDiff() {
-
-    }
-    renderToken() {
-
-    }
-    renderSame() {
-
     }
     render() {
         this.container.innerHTML = this.renderJSON(this.data.base);
