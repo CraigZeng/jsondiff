@@ -9,6 +9,7 @@ class JSONDiff {
     }
     render() {
         this.container.innerHTML = this.renderJSON(this.data.base);
+        utils.addCollapsedHandle(this.container);
     }
     renderJSON(jsonObj) {
         return utils.formatJSON(jsonObj);

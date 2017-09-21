@@ -5,4 +5,30 @@
     .json-key {
         color: red;
     }
+    .json-arr-item,
+    .json-prop {
+        padding-left: @padding-gap;
+        margin-left: -@padding-gap;
+        &.can-expend {
+            position: relative; //待测试的点
+        }
+        &.collapsed {
+            > .json-block {
+                display: none;
+            }
+            > .icon-ell::before {
+                color: #aaa;
+                content: "\2026";
+                font-weight: bold;
+            }
+        }
+        .json-expend-icon {
+            display: inline-block;
+            position: absolute;
+            width: @padding-gap;
+            left: 0;
+            top: 0;
+            text-align: center;
+        }
+    }
 }
