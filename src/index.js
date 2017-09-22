@@ -63,11 +63,11 @@ function createDiffArrayToken(position) {
 
 
 function innerDiff(left, right, key) {
-    debugger;
     var leftType = utils.typeIt(left);
     var rightType = utils.typeIt(right);
     if (leftType === rightType) {
         var html = '';
+        var keyHtml = '';
         switch (leftType) {
             case 'object':
                 var keysMap = {};
@@ -76,9 +76,9 @@ function innerDiff(left, right, key) {
                     keysMap[key] = true;
                 });
                 keys = Object.keys(keysMap).sort();
-                html = html + (key ? (createJSONDiffKey(key) + createJSONDiffSplitToken()) : '');
-                html = html + createDiffBlockToken('start');
-                html = html + createDiffRow(html, html);
+                keyHtml = key ? (createJSONDiffKey(key) + createJSONDiffSplitToken()) : '';
+                keyHtml = keyHtml + createDiffBlockToken('start');
+                html = html + createDiffRow(keyHtml, keyHtml);
                 html = html + wrapDiffBlock(keys.map(function (key) {
                     return innerDiff(left[key], right[key], key);
                 }).join(''));
@@ -86,7 +86,7 @@ function innerDiff(left, right, key) {
                 break;
             case 'array':
                 var len = Math.max(left.length, right.length);
-                var keyHtml = key ? (createJSONDiffKey(key) + createJSONDiffSplitToken()) : '';
+                keyHtml = key ? (createJSONDiffKey(key) + createJSONDiffSplitToken()) : '';
                 keyHtml = keyHtml + createDiffArrayToken('start');
                 for (var i = 0; i < len; i++) {
                     html = html + innerDiff(left[i], right[i]);

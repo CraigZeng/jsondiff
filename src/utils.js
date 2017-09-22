@@ -132,7 +132,7 @@ function formatJSON(jsonObj) {
 }
 
 function formatJSONWithKey(jsonObj, key) {
-    formatInnerJSON(jsonObj, key);
+    return formatInnerJSON(jsonObj, key);
 }
 
 function addCollapsedHandle(container) {
