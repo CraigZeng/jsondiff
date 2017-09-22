@@ -32,3 +32,44 @@
         }
     }
 }
+
+.json-diff-block {
+    padding-left: @padding-gap;
+    .json-diff-row {
+        .json-diff-left {
+            display: inline-block;
+            width: 50%;
+        }
+        .json-diff-right {
+            display: inline-block;
+            width: 50%;
+        }
+    }
+    .json-diff-key {
+        color: red;
+    }
+    .json-diff-arr-item,
+    .json-diff-prop {
+        &.can-expend {
+            position: relative; //待测试的点
+        }
+        &.collapsed{
+            > .icon-ell::before {
+                color: #aaa;
+                content: "\2026";
+                font-weight: bold;
+            }
+        }
+        &.collapsed + .json-block {
+            display: none;
+        }
+        .json-expend-icon {
+            display: inline-block;
+            position: absolute;
+            width: @padding-gap;
+            left: 0;
+            top: 0;
+            text-align: center;
+        }
+    }
+}

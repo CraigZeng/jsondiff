@@ -86,39 +86,53 @@ function wrapJSONArrItem(html, canExpend) {
     return '<div class="json-arr-item' + (canExpend ? ' can-expend' : '') + '">' + html + '</div>';
 }
 
-function formatInnerJSON(jsonObj) {
+function formatInnerJSON(jsonObj, key) {
     var type = typeIt(jsonObj);
     var html = '';
     switch (type) {
         case 'object':
             var keys = Object.keys(jsonObj);
             html = createJSONBlockToken('start') + wrapJSONBlock(keys.sort().map(function (key) {
-                return wrapJSONProp(createJSONKey(key) + createJSONSplitToken() + formatInnerJSON(jsonObj[key]), canExpend(jsonObj[key]));
+                return formatInnerJSON(jsonObj[key], key);
             }).join('')) + createCollapsedIcon() + createJSONBlockToken('end');
+            html = wrapJSONProp((key ? (createJSONKey(key) + createJSONSplitToken()) : '') + html, true);
             break;
         case 'array':
             html = createJSONArrayToken('start') + wrapJSONBlock(jsonObj.map(function (item) {
                 return wrapJSONArrItem(formatInnerJSON(item), canExpend(item));
             }).join('')) + createCollapsedIcon() + createJSONArrayToken('end');
+            html = wrapJSONProp((key ? (createJSONKey(key) + createJSONSplitToken()) : '') + html, true);
             break;
         case 'number':
-            html = createJSONValue('number', jsonObj);
+            html = key
+                ? wrapJSONProp(createJSONKey(key) + createJSONSplitToken() + createJSONValue('number', jsonObj), false)
+                : createJSONValue('number', jsonObj);
             break;
         case 'string':
-            html = createJSONValue('string', jsonObj);
+            html = key
+                ? wrapJSONProp(createJSONKey(key) + createJSONSplitToken() + createJSONValue('string', jsonObj), false)
+                : createJSONValue('string', jsonObj);
             break;
         case 'null':
-            html = createJSONValue('null', jsonObj);
+            html = key
+                ? wrapJSONProp(createJSONKey(key) + createJSONSplitToken() + createJSONValue('null', jsonObj), false)
+                : createJSONValue('null', jsonObj);
             break;
         default:
-            html = createJSONValue('', jsonObj);
+            html = key
+                ? wrapJSONProp(createJSONKey(key) + createJSONSplitToken() + createJSONValue('', jsonObj), false)
+                : createJSONValue('', jsonObj);
             break;
     }
     return html;
 }
 
 function formatJSON(jsonObj) {
-    return '<div class="json-block">' + formatInnerJSON(jsonObj) + '</div>';
+    return wrapJSONBlock(formatInnerJSON(jsonObj));
+}
+
+function formatJSONWithKey(jsonObj, key) {
+    formatInnerJSON(jsonObj, key);
 }
 
 function addCollapsedHandle(container) {
@@ -135,6 +149,7 @@ function addCollapsedHandle(container) {
 
 export default {
     typeIt,
-    formatJSON,
+    escapeHtml,
+    formatJSONWithKey,
     addCollapsedHandle
 }
