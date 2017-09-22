@@ -127,29 +127,15 @@ function formatInnerJSON(jsonObj, key) {
     return html;
 }
 
-function formatJSON(jsonObj) {
-    return wrapJSONBlock(formatInnerJSON(jsonObj));
-}
-
 function formatJSONWithKey(jsonObj, key) {
-    return formatInnerJSON(jsonObj, key);
-}
-
-function addCollapsedHandle(container) {
-    container.addEventListener('click', function (e) {
-        var block = e.target.parentNode;
-        var cls = block.getAttribute('class');
-        if (cls.indexOf('collapsed') !== -1) {
-            block.setAttribute('class', cls.replace(' collapsed', ''));
-        } else {
-            block.setAttribute('class', cls + ' collapsed');
-        }
-    });
+    if (typeof jsonObj === 'undefined') {
+        return '';
+    }
+    return wrapJSONBlock(formatInnerJSON(jsonObj, key));
 }
 
 export default {
     typeIt,
     escapeHtml,
-    formatJSONWithKey,
-    addCollapsedHandle
+    formatJSONWithKey
 }

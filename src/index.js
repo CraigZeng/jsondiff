@@ -9,6 +9,10 @@ function createDiffRow(left, right) {
     return '<div class="json-diff-row"><div class="json-diff-left">' + left + '</div><div class="json-diff-right">' + right + '</div></div>';
 }
 
+function createExpendIcon() {
+    return '<span class="json-diff-expend-icon js-toggle-diff-json">-</span>';
+}
+
 function createJSONDiffKey(key) {
     return '<span class="json-diff-key">' + key + '</span>';
 }
@@ -76,7 +80,7 @@ function innerDiff(left, right, key) {
                     keysMap[key] = true;
                 });
                 keys = Object.keys(keysMap).sort();
-                keyHtml = key ? (createJSONDiffKey(key) + createJSONDiffSplitToken()) : '';
+                keyHtml = key ? (createExpendIcon() + createJSONDiffKey(key) + createJSONDiffSplitToken()) : createExpendIcon();
                 keyHtml = keyHtml + createDiffBlockToken('start');
                 html = html + createDiffRow(keyHtml, keyHtml);
                 html = html + wrapDiffBlock(keys.map(function (key) {
@@ -86,7 +90,7 @@ function innerDiff(left, right, key) {
                 break;
             case 'array':
                 var len = Math.max(left.length, right.length);
-                keyHtml = key ? (createJSONDiffKey(key) + createJSONDiffSplitToken()) : '';
+                keyHtml = key ? (createExpendIcon() + createJSONDiffKey(key) + createJSONDiffSplitToken()) : createExpendIcon();
                 keyHtml = keyHtml + createDiffArrayToken('start');
                 for (var i = 0; i < len; i++) {
                     html = html + innerDiff(left[i], right[i]);
@@ -114,10 +118,36 @@ class JSONDiff {
     }
     render() {
         this.container.innerHTML = this.diff(this.data.base, this.data.test);
-        utils.addCollapsedHandle(this.container);
+        this.bindEvent();
     }
     diff(base, test) {
         return wrapDiffBlock(innerDiff(base, test));
+    }
+    bindEvent() {
+        this.container.addEventListener('click', function (e) {
+            var target = e.target;
+            if (target.className.indexOf('js-toggle-json') !== -1) {
+                var block = e.target.parentNode;
+                var cls = block.className;
+                if (cls.indexOf('collapsed') !== -1) {
+                    block.className = cls.replace(' collapsed', '');
+                } else {
+                    block.className = cls + ' collapsed';
+                }
+            }
+        });
+        this.container.addEventListener('click', function (e) {
+            var target = e.target;
+            if (target.className.indexOf('js-toggle-diff-json') !== -1) {
+                var block = target.parentNode.parentNode;
+                var cls = block.className;
+                if (cls.indexOf('collapsed') !== -1) {
+                    block.className = cls.replace(' collapsed', '');
+                } else {
+                    block.className = cls + ' collapsed';
+                }
+            }
+        });
     }
 }
 

@@ -39,37 +39,25 @@
         .json-diff-left {
             display: inline-block;
             width: 50%;
+            vertical-align: top;
         }
         .json-diff-right {
             display: inline-block;
             width: 50%;
+            vertical-align: top;
         }
     }
     .json-diff-key {
         color: red;
     }
-    .json-diff-arr-item,
-    .json-diff-prop {
-        &.can-expend {
-            position: relative; //待测试的点
-        }
-        &.collapsed{
-            > .icon-ell::before {
-                color: #aaa;
-                content: "\2026";
-                font-weight: bold;
-            }
-        }
-        &.collapsed + .json-block {
-            display: none;
-        }
-        .json-expend-icon {
-            display: inline-block;
-            position: absolute;
-            width: @padding-gap;
-            left: 0;
-            top: 0;
-            text-align: center;
-        }
+   
+    .json-diff-row.collapsed + .json-diff-block {
+        display: none;
+    }
+
+    .json-diff-expend-icon {
+        display: inline-block;
+        width: @padding-gap;
+        text-align: center;
     }
 }
