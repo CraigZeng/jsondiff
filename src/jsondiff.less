@@ -2,8 +2,25 @@
 
 .json-block {
     padding-left: @padding-gap;
+    font-family: Monaco,Consolas,Courier New,monospace;
+    font-size: 14px;
+    white-space: pre-wrap;
     .json-key {
-        color: red;
+        word-break: break-all;
+        font-weight: bold;
+    }
+    .json-split-token {
+        display: inline-block;
+        margin: 0 5px 0 1px;
+    }
+    .json-value {
+        word-break: break-all;
+        &.json-number {
+            color: #00f;
+        }
+        &.json-string {
+            color: #080;
+        }
     }
     .json-arr-item,
     .json-prop {
@@ -23,18 +40,26 @@
             }
         }
         .json-expend-icon {
-            display: inline-block;
             position: absolute;
-            width: @padding-gap;
+            width: @padding-gap * 0.7;
+            height: @padding-gap * 0.7;
             left: 0;
-            top: 0;
+            top: @padding-gap * 0.15;
+            line-height: 0.8;
+            border: 1px solid #aaa;
+            box-sizing: border-box;
             text-align: center;
+            cursor: pointer;
+            user-select: none;
         }
     }
 }
 
 .json-diff-block {
     padding-left: @padding-gap;
+    font-family: Monaco,Consolas,Courier New,monospace;
+    font-size: 14px;
+    white-space: pre-wrap;
     .json-diff-row {
         .json-diff-left {
             display: inline-block;
@@ -48,16 +73,58 @@
         }
     }
     .json-diff-key {
-        color: red;
+        word-break: break-all;
+        font-weight: bold;
+    }
+
+    .json-diff-value {
+        word-break: break-all;
+        &.json-diff-number {
+            color: #00f;
+        }
+        &.json-diff-string {
+            color: #080;
+        }
+    }
+
+    .fixed-json-block {
+        & > .json-block {
+            padding: 0;
+        }
+    }
+
+    .json-diff-split-token {
+        display: inline-block;
+        margin: 0 5px 0 1px;
     }
    
     .json-diff-row.collapsed + .json-diff-block {
-        display: none;
+        display: none;  
+    }
+
+    .json-diff-row.collapsed > .json-diff-left >.icon-ell::before,
+    .json-diff-row.collapsed > .json-diff-right >.icon-ell::before {
+        color: #aaa;
+        content: "\2026";
+        font-weight: bold;
+    }
+
+    .json-diff-block-token {
+        display: inline-block;
+        vertical-align: middle;
     }
 
     .json-diff-expend-icon {
         display: inline-block;
-        width: @padding-gap;
+        margin-right: 5px;
+        width: @padding-gap * 0.7;
+        height: @padding-gap * 0.7;
+        line-height: 0.8;
+        box-sizing: border-box;
+        border: 1px solid #aaa;
+        vertical-align: middle;
         text-align: center;
+        cursor: pointer;
+        user-select: none;
     }
 }

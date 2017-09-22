@@ -5,6 +5,10 @@ function wrapDiffBlock(html) {
     return '<div class="json-diff-block">' + html + '</div>';
 }
 
+function createCollapsedIcon() {
+    return '<span class="icon-ell"></span>';
+}
+
 function createDiffRow(left, right) {
     return '<div class="json-diff-row"><div class="json-diff-left">' + left + '</div><div class="json-diff-right">' + right + '</div></div>';
 }
@@ -49,7 +53,7 @@ function createDiffBlockToken(position) {
     if (position === 'end') {
         html = '<span class="json-diff-block-token json-diff-block-token-end">}</span>';
     } else {
-        html = '<span class="json-diff-block-token json-diff-block-token-start">{</span>';
+        html = '<span class="json-diff-block-token json-diff-block-token-start">{</span>' + createCollapsedIcon();
     }
     return html;
 }
@@ -60,7 +64,16 @@ function createDiffArrayToken(position) {
     if (position === 'end') {
         html = '<span class="json-diff-block-token json-diff-array-token-end">]</span>';
     } else {
-        html = '<span class="json-diff-block-token json-diff-array-token-start">[</span>';
+        html = '<span class="json-diff-block-token json-diff-array-token-start">[</span>' + createCollapsedIcon();
+    }
+    return html;
+}
+
+function formatJSONWithKey(obj, key) {
+    var html = utils.formatJSONWithKey(obj, key);
+    var type = utils.typeIt(obj);
+    if (type !== 'object' && type !== 'array') {
+        html = '<div class="fixed-json-block">' + html + '</div>';
     }
     return html;
 }
@@ -95,7 +108,7 @@ function innerDiff(left, right, key) {
                 for (var i = 0; i < len; i++) {
                     html = html + innerDiff(left[i], right[i]);
                 }
-                html = createDiffRow(keyHtml, keyHtml) + wrapDiffBlock(html);
+                html = createDiffRow(createCollapsedIcon(), createCollapsedIcon()) + wrapDiffBlock(html);
                 html = html + createDiffRow(createDiffArrayToken('end'), createDiffArrayToken('end'));
                 break;
             default:
@@ -106,7 +119,7 @@ function innerDiff(left, right, key) {
         }
         return html;
     } else {
-        return createDiffRow(utils.formatJSONWithKey(left, key), utils.formatJSONWithKey(right, key));
+        return createDiffRow(formatJSONWithKey(left, key), formatJSONWithKey(right, key));
     }
 }
 
@@ -131,8 +144,10 @@ class JSONDiff {
                 var cls = block.className;
                 if (cls.indexOf('collapsed') !== -1) {
                     block.className = cls.replace(' collapsed', '');
+                    target.textContent = '-';
                 } else {
                     block.className = cls + ' collapsed';
+                    target.textContent = '+';
                 }
             }
         });
@@ -141,10 +156,17 @@ class JSONDiff {
             if (target.className.indexOf('js-toggle-diff-json') !== -1) {
                 var block = target.parentNode.parentNode;
                 var cls = block.className;
+                var childrens = Array.prototype.slice.call(block.children, 0);
                 if (cls.indexOf('collapsed') !== -1) {
                     block.className = cls.replace(' collapsed', '');
+                    childrens.forEach(function (item) {
+                        item.children[0].textContent = '-';
+                    });
                 } else {
                     block.className = cls + ' collapsed';
+                    childrens.forEach(function (item) {
+                        item.children[0].textContent = '+';
+                    });
                 }
             }
         });
