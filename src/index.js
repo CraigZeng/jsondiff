@@ -105,7 +105,7 @@ function innerDiff(left, right, key, path) {
                 keyHtml = key ? (this.createExpendIcon() + this.createJSONDiffKey(key) + this.createJSONDiffSplitToken()) : this.createExpendIcon();
                 keyHtml = keyHtml + this.createDiffArrayToken('start');
                 for (var i = 0; i < len; i++) {
-                    html = html + this.innerDiff(left[i], right[i], undefined, path.concat('[0]'));
+                    html = html + this.innerDiff(left[i], right[i], undefined, path.concat('[' + i + ']'));
                 }
                 html = this.createDiffRow(this.createCollapsedIcon(), this.createCollapsedIcon(), path) + this.wrapDiffBlock(html);
                 html = html + this.createDiffRow(this.createDiffArrayToken('end'), this.createDiffArrayToken('end'));

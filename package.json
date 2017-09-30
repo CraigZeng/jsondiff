@@ -4,8 +4,8 @@
   "description": "visualize json difference",
   "main": "src/index.js",
   "scripts": {
-    "build": "webpack",
-    "dev": "webpack-dev-server --open",
+    "build": "export NODE_ENV=production && webpack --progress -p",
+    "dev": "export NODE_ENV=dev && webpack-dev-server --open",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "repository": {
@@ -33,6 +33,7 @@
     "less-loader": "^4.0.5",
     "style-loader": "^0.18.2",
     "webpack": "^3.6.0",
-    "webpack-dev-server": "^2.8.2"
+    "webpack-dev-server": "^2.8.2",
+    "webpack-merge": "^4.1.0"
   }
 }
