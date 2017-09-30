@@ -53,7 +53,7 @@ function createDiffBlockToken(position) {
     if (position === 'end') {
         html = '<span class="json-diff-block-token json-diff-block-token-end">}</span>';
     } else {
-        html = '<span class="json-diff-block-token json-diff-block-token-start">{</span>' + createCollapsedIcon();
+        html = '<span class="json-diff-block-token json-diff-block-token-start">{</span>' + this.createCollapsedIcon();
     }
     return html;
 }
@@ -64,7 +64,7 @@ function createDiffArrayToken(position) {
     if (position === 'end') {
         html = '<span class="json-diff-block-token json-diff-array-token-end">]</span>';
     } else {
-        html = '<span class="json-diff-block-token json-diff-array-token-start">[</span>' + createCollapsedIcon();
+        html = '<span class="json-diff-block-token json-diff-array-token-start">[</span>' + this.createCollapsedIcon();
     }
     return html;
 }
@@ -77,7 +77,6 @@ function formatJSONWithKey(obj, key) {
     }
     return html;
 }
-
 
 function innerDiff(left, right, key, path) {
     var leftType = utils.typeIt(left);
@@ -93,41 +92,55 @@ function innerDiff(left, right, key, path) {
                     keysMap[key] = true;
                 });
                 keys = Object.keys(keysMap).sort();
-                keyHtml = key ? (createExpendIcon() + createJSONDiffKey(key) + createJSONDiffSplitToken()) : createExpendIcon();
-                keyHtml = keyHtml + createDiffBlockToken('start');
-                html = html + createDiffRow(keyHtml, keyHtml, path);
-                html = html + wrapDiffBlock(keys.map(function (key) {
-                    return innerDiff(left[key], right[key], key, path.concat(key));
+                keyHtml = key ? (this.createExpendIcon() + this.createJSONDiffKey(key) + this.createJSONDiffSplitToken()) : this.createExpendIcon();
+                keyHtml = keyHtml + this.createDiffBlockToken('start');
+                html = html + this.createDiffRow(keyHtml, keyHtml, path);
+                html = html + wrapDiffBlock(keys.map((key) => {
+                    return this.innerDiff(left[key], right[key], key, path.concat(key));
                 }).join(''));
-                html = html + createDiffRow(createDiffBlockToken('end'), createDiffBlockToken('end'));
+                html = html + this.createDiffRow(this.createDiffBlockToken('end'), this.createDiffBlockToken('end'));
                 break;
             case 'array':
                 var len = Math.max(left.length, right.length);
-                keyHtml = key ? (createExpendIcon() + createJSONDiffKey(key) + createJSONDiffSplitToken()) : createExpendIcon();
-                keyHtml = keyHtml + createDiffArrayToken('start');
+                keyHtml = key ? (this.createExpendIcon() + this.createJSONDiffKey(key) + this.createJSONDiffSplitToken()) : this.createExpendIcon();
+                keyHtml = keyHtml + this.createDiffArrayToken('start');
                 for (var i = 0; i < len; i++) {
-                    html = html + innerDiff(left[i], right[i], undefined, path.concat('[0]'));
+                    html = html + this.innerDiff(left[i], right[i], undefined, path.concat('[0]'));
                 }
-                html = createDiffRow(createCollapsedIcon(), createCollapsedIcon(), path) + wrapDiffBlock(html);
-                html = html + createDiffRow(createDiffArrayToken('end'), createDiffArrayToken('end'));
+                html = this.createDiffRow(this.createCollapsedIcon(), this.createCollapsedIcon(), path) + this.wrapDiffBlock(html);
+                html = html + this.createDiffRow(this.createDiffArrayToken('end'), this.createDiffArrayToken('end'));
                 break;
             default:
-                var leftHtml = (key ? (createJSONDiffKey(key) + createJSONDiffSplitToken()) : '') + createJSONDiffValue(left);
-                var rightHtml = (key ? (createJSONDiffKey(key) + createJSONDiffSplitToken()) : '') + createJSONDiffValue(right);
-                html = createDiffRow(leftHtml, rightHtml, path);
+                var leftHtml = (key ? (this.createJSONDiffKey(key) + this.createJSONDiffSplitToken()) : '') + this.createJSONDiffValue(left);
+                var rightHtml = (key ? (this.createJSONDiffKey(key) + this.createJSONDiffSplitToken()) : '') + this.createJSONDiffValue(right);
+                html = this.createDiffRow(leftHtml, rightHtml, path);
                 break;
         }
         return html;
     } else {
-        return createDiffRow(formatJSONWithKey(left, key), formatJSONWithKey(right, key), path);
+        return this.createDiffRow(this.formatJSONWithKey(left, key), this.formatJSONWithKey(right, key), path);
     }
 }
+
+let tools = {
+    wrapDiffBlock,
+    createCollapsedIcon,
+    createDiffRow,
+    createExpendIcon,
+    createJSONDiffKey,
+    createJSONDiffSplitToken,
+    createJSONDiffValue,
+    createDiffBlockToken,
+    createDiffArrayToken,
+    formatJSONWithKey,
+    innerDiff
+};
 
 class JSONDiff {
     constructor(options) {
         this.container = options.container;
         this.data = options.data;
-        this.onRenderDiffRow = options.onRenderDiffRow;
+        this.tools = Object.assign(Object.assign({}, tools), options.tools);
         this.render();
         this.bindEvent();
     }
@@ -135,7 +148,7 @@ class JSONDiff {
         this.container.innerHTML = this.diff(this.data.base, this.data.test);
     }
     diff(base, test) {
-        return wrapDiffBlock(innerDiff(base, test, undefined, ['']));
+        return wrapDiffBlock(this.tools.innerDiff(base, test, undefined, ['']));
     }
     bindEvent() {
         this.container.addEventListener('click', function (e) {
