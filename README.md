@@ -3,4 +3,4 @@ visualize the diff of json
 # Dev
 npm install
 
-npm run start
+npm run dev
